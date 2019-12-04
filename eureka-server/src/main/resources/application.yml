@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: eureka-server
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+server:
+  port: 7001
+
+
+eureka:
+  client:
+    # 是否将自己当成服务注册到注册中心
+    # 如果设置成true的话，必须设置注册的地址。如果不设置注册的地址就会报错，因为找不到你要注册的地址。
+    # 如果设置成false的话，eureka的实例列表会没有这个服务实例
+    register-with-eureka: false
+    # 是否获取注册信息  , false = 不获取，true = 获取
+    # 目前如果设置成true的话，一开始启动的时候会报错，因为在他获取注册信息的时候，7001这个端口还没有启动好。所以根本没法获取。
+    fetch-registry: false
+    service-url:
+      defaultZone: http://wwww.eureka-server.cn:${server.port}/
