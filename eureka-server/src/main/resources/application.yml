@@ -20,4 +20,4 @@ eureka:
     # 目前如果设置成true的话，一开始启动的时候会报错，因为在他获取注册信息的时候，7001这个端口还没有启动好。所以根本没法获取。
     fetch-registry: false
     service-url:
-      defaultZone: http://wwww.eureka-server.cn:${server.port}/
+      defaultZone: http://wwww.eureka-server.cn:${server.port}/eureka/
