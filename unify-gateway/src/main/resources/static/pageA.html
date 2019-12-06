@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>测试页面</title>
+    　
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+<div id="myDiv">
+    <h2>Let AJAX change this text</h2>
+</div>
+<button id="b01" type="button">inno-permission-demo</button>
+
+<script type="text/javascript">
+
+
+    $(document).ajaxError(function (event, xhr, ajaxOptions, thrownError) {
+        console.log(xhr)
+        debugger;
+        if (xhr.getResponseHeader("REDIRECT") == "SSOREDIRECT") {
+            window.location.href = xhr.getResponseHeader("CONTEXTPATH");
+            /*
+            * 注：CONTEXTPATH默认携带一个参数redirectUrl，赋值直接拼接在后面即可。
+            * 如：window.location.href = xhr.getResponseHeader("CONTEXTPATH") + encodeURI(window.location.href);
+            * 此参数在步骤二中的初始化过滤器中用于登录成功后跳转的地址。
+            */
+        }
+    });
+
+
+    $(document).ready(function () {
+
+        $("#b01").click(function () {
+
+            $.ajax({
+                url: "/api/businessExample/test/",    //请求的url地址
+                dataType: "json",   //返回格式为json
+                async: true,//请求是否异步，默认为异步，这也是ajax重要特性
+                // data:{"id":"value"},    //参数值
+                type: "GET",   //请求方式
+                xhrFields: { withCredentials: true },
+                // crossDomain: true,
+                beforeSend: function (XMLHttpRequest) {
+                    //请求前的处理
+                    XMLHttpRequest.setRequestHeader("Location", "http://localhost:8080/pageA.html");
+                },
+                success: function (result) {
+                    //请求成功时处理
+                    console.log("请求success")
+                    console.log(result)
+
+                },
+                complete: function () {
+                    //请求完成的处理
+                },
+                error: function () {
+                    //请求出错处理
+                    console.log("请求error")
+                }
+            });
+
+
+            // $("#myDiv").html(htmlobj.responseText);
+        });
+
+
+
+
+    });
+
+
+</script>
+
+
+</body>
+
+</html>

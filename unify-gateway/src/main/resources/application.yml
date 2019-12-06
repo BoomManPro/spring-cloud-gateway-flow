@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: unify-gateway
+
+authentication:
+  type: cas_authentication
+  cas-config:
+    cas-server-url: https://cas.example.org:8443/cas
+    cas-server-login-url: ${authentication.cas-config.cas-server-url}/login
+    cas-server-logout-url: ${authentication.cas-config.cas-server-url}/logout?service=${authentication.cas-config.app-server-url}
+    app-server-url: http://localhost:8080
+    app-login-url: /login
+    app-logout-url: /api/logout
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://wwww.eureka-server.cn:7001/eureka/
+
+zuul:
+  routes:
+    business-example1:
+      path: /api/businessExample/**
+      service-id: business-eample1
+      #设置转发时不忽略path的前缀.把path的所有内容当转发路由，很有用！！！
+      stripPrefix: false
+
+
+
+
+sso:
+  auto-import-certificate: true
+  certificate-name-alias: cas.example.org.cer
+  certificate-file-name: cas.example.org.cer
+  certificate-path:
+    - classpath:/ssl/
+    - file:./ssl/
+  passphrase: changeit
