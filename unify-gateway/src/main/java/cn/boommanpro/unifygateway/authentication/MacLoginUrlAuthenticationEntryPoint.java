@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 /**
  * Spring Security 未登录 返回json  替代原本返回视图
  *
- * @author <a href="mailto:wangqimeng@mininglamp.com">wangqimeng</a>
+ * @author wangqimeng
  * @date 2019/7/18 15:27
  * @created by wangqimeng
  */

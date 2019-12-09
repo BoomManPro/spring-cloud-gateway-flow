@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
- * @author <a href="mailto:wangqimeng@mininglamp.com">wangqimeng</a>
+ * @author wangqimeng
  * @date 2019/7/19 16:36
  * @created by wangqimeng
  */

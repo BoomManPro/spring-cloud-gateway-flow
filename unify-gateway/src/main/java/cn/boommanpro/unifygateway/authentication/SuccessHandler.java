@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 /**
  * Spring Security 登录成功会跳转到这里
  *
- * @author <a href="mailto:wangqimeng@mininglamp.com">wangqimeng</a>
+ * @author wangqimeng
  * @date 2019/7/16 17:42
  * @created by wangqimeng
  */

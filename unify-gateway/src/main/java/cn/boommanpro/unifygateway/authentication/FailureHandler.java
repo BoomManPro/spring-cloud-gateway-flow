@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 /**
  * Spring Security 登录失败会跳转到这里
  *
- * @author <a href="mailto:wangqimeng@mininglamp.com">wangqimeng</a>
+ * @author wangqimeng
  * @date 2019/7/16 17:42
  * @created by wangqimeng
  */
