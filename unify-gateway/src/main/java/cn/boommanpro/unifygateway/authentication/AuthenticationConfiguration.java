@@ -26,6 +26,7 @@ import org.springframework.security.cas.authentication.CasAuthenticationProvider
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
@@ -45,8 +46,9 @@ import org.springframework.security.web.context.request.async.WebAsyncManagerInt
  */
 @Slf4j
 @Configuration
-
 public class AuthenticationConfiguration {
+
+
 
     @Bean
     @ConfigurationProperties("authentication")
@@ -54,11 +56,14 @@ public class AuthenticationConfiguration {
         return new AuthenticationConfigProperties();
     }
 
+
     @Order(1)
-    @Configuration
-    @EnableWebSecurity(debug = true)
+    @EnableWebSecurity
     @ConditionalOnProperty(prefix = "authentication", name = "type", havingValue = "normal_authentication", matchIfMissing = true)
     public static class NormalAuthenticationConfiguration extends WebSecurityConfigurerAdapter {
+
+        @Resource
+        private AuthenticationConfigProperties authenticationConfigProperties;
 
         @Resource
         private UserDetailsService adminDetailServiceImpl;
@@ -79,6 +84,11 @@ public class AuthenticationConfiguration {
             authProvider.setUserDetailsService(adminDetailServiceImpl);
             authProvider.setPasswordEncoder(passwordEncoder());
             return authProvider;
+        }
+
+        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.debug(authenticationConfigProperties.isDebug());
         }
 
         @Override
@@ -110,13 +120,17 @@ public class AuthenticationConfiguration {
     }
 
     @Order(2)
-    @Configuration
-    @EnableWebSecurity(debug = true)
+    @EnableWebSecurity
     @ConditionalOnProperty(prefix = "authentication", name = "type", havingValue = "cas_authentication")
     public static class CasAuthenticationConfiguration extends WebSecurityConfigurerAdapter {
 
+
+
         @Resource
         private CasConfigProperties casProperties;
+
+        @Resource
+        private AuthenticationConfigProperties authenticationConfigProperties;
 
         @Bean
         @ConfigurationProperties(prefix = "sso")
@@ -143,6 +157,11 @@ public class AuthenticationConfiguration {
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             super.configure(auth);
             auth.authenticationProvider(casAuthenticationProvider());
+        }
+
+        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.debug(authenticationConfigProperties.isDebug());
         }
 
         /**
@@ -179,7 +198,7 @@ public class AuthenticationConfiguration {
 
             http.exceptionHandling().authenticationEntryPoint(customerCasAuthenticationEntryPoint())
                     .and()
-                    .addFilter(casAuthenticationFilter())
+                    .addFilter(casAuthenticationFilter(casAuthenticationSuccessHandler()))
                     .addFilterBefore(casLogoutFilter(), LogoutFilter.class)
                     .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
             ;
@@ -189,6 +208,10 @@ public class AuthenticationConfiguration {
 
         }
 
+        @Bean
+        public CasAuthenticationSuccessHandler casAuthenticationSuccessHandler() {
+            return new CasAuthenticationSuccessHandler();
+        }
 
         @Bean
         public ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> singleSignOutHttpSessionListener() {
@@ -225,11 +248,11 @@ public class AuthenticationConfiguration {
          * CAS认证过滤器
          */
         @Bean
-        public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
+        public CasAuthenticationFilter casAuthenticationFilter(CasAuthenticationSuccessHandler casAuthenticationSuccessHandler) throws Exception {
             CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
             casAuthenticationFilter.setAuthenticationManager(authenticationManager());
             casAuthenticationFilter.setFilterProcessesUrl(casProperties.getAppLoginUrl());
-            casAuthenticationFilter.setAuthenticationSuccessHandler(new CasAuthenticationSuccessHandler());
+            casAuthenticationFilter.setAuthenticationSuccessHandler(casAuthenticationSuccessHandler);
             return casAuthenticationFilter;
         }
 
@@ -283,9 +306,17 @@ public class AuthenticationConfiguration {
     }
 
     @Order(3)
-    @Configuration
+    @EnableWebSecurity
     @ConditionalOnProperty(prefix = "authentication", name = "type", havingValue = "none_authentication", matchIfMissing = false)
     public static class NoneAuthenticationConfiguration extends WebSecurityConfigurerAdapter {
+
+        @Resource
+        private AuthenticationConfigProperties authenticationConfigProperties;
+
+        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.debug(authenticationConfigProperties.isDebug());
+        }
 
         @Bean
         public Filter noneAuthenticationFilter() {

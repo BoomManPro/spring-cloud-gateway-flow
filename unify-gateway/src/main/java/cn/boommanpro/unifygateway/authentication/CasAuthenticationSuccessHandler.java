@@ -1,6 +1,7 @@
 package cn.boommanpro.unifygateway.authentication;
 
 import java.io.IOException;
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  */
 public class CasAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+    @Resource
+    private CasConfigProperties casConfigProperties;
+
     /**
      * 做Success 重定向
      */
@@ -23,6 +27,8 @@ public class CasAuthenticationSuccessHandler implements AuthenticationSuccessHan
         request.getSession().removeAttribute(CasConstant.REDIRECT_URL);
         if (location != null) {
             response.sendRedirect(location.toString());
+        }else {
+            response.sendRedirect(casConfigProperties.getAppServerUrl());
         }
     }
 }
