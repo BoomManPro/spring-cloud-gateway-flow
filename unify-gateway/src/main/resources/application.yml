@@ -4,6 +4,7 @@ spring:
 
 authentication:
   type: cas_authentication
+  debug: true
   cas-config:
     cas-server-url: https://cas.example.org:8443/cas
     cas-server-login-url: ${authentication.cas-config.cas-server-url}/login
@@ -23,11 +24,12 @@ zuul:
     business-example1:
       path: /api/businessExample1/**
       service-id: business-example1
-      #ÉèÖÃ×ª·¢Ê±²»ºöÂÔpathµÄÇ°×º.°ÑpathµÄËùÓĞÄÚÈİµ±×ª·¢Â·ÓÉ£¬ºÜÓĞÓÃ£¡£¡£¡
+      #è®¾ç½®è½¬å‘æ—¶ä¸å¿½ç•¥pathçš„å‰ç¼€.æŠŠpathçš„æ‰€æœ‰å†…å®¹å½“è½¬å‘è·¯ç”±ï¼Œå¾ˆæœ‰ç”¨ï¼ï¼ï¼
       stripPrefix: false
 
 
-
+#logging.level:
+#  org.springframework.security: debug
 
 sso:
   auto-import-certificate: true
