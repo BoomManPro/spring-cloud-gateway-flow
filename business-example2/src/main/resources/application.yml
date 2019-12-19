@@ -1,0 +1,17 @@
+
+server:
+  servlet:
+    context-path: /api/businessExample2/
+  port: 8002
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://wwww.eureka-server.cn:7001/eureka/
+    register-with-eureka: true
+
+
+spring:
+  application:
+    name: business-example2

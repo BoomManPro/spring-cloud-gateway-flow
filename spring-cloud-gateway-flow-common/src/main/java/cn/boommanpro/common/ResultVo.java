@@ -1,5 +1,7 @@
 package cn.boommanpro.common;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -7,7 +9,7 @@ import lombok.Data;
  * @date 2019/11/7 14:40
  */
 @Data
-public class ResultVo<T> {
+public class ResultVo<T> implements Serializable {
 
     private String code;
 
@@ -18,6 +20,9 @@ public class ResultVo<T> {
     private static final String SUCCESS = "SUCCESS";
 
     private static final String ERROR = "ERROR";
+
+    public ResultVo() {
+    }
 
     private ResultVo(String code, String message, T data) {
         this.code = code;

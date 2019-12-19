@@ -21,8 +21,8 @@ eureka:
 zuul:
   routes:
     business-example1:
-      path: /api/businessExample/**
-      service-id: business-eample1
+      path: /api/businessExample1/**
+      service-id: business-example1
       #设置转发时不忽略path的前缀.把path的所有内容当转发路由，很有用！！！
       stripPrefix: false
 
